@@ -1,8 +1,16 @@
 require 'spec_helper'
 
 describe ObjectSerializer::Serializer do
-  Person = Struct.new(:first_name, :last_name, :company)
+  Person = Struct.new(:first_name, :last_name, :company, :catchphrases)
   Company = Struct.new(:name)
+  Catchphrase = Struct.new(:phrase)
+  
+  let(:fred) do
+    Person.new("Fred", 
+               "Flintstone", 
+               Company.new("Slate Rock and Gravel Company"),
+               [Catchphrase.new("Yabba Dabba Do!"), Catchphrase.new("WILMA!!!")]) 
+  end
   
   let(:person_serializer) do
     ObjectSerializer::Serializer.new do
@@ -55,8 +63,16 @@ describe ObjectSerializer::Serializer do
       serialize :company, :serializer => company_serializer
     end
     
-    company = Company.new("Slate Rock and Gravel Company")
-    fred = Person.new("Fred", "Flintstone", company)
     serializer.to_hash(fred).should == { "first_name" => "Fred", "company" => {"name" => "Slate Rock and Gravel Company"}}
+  end
+  
+  it "maps collections with custom serializers" do
+    catchphrase_serializer = ObjectSerializer::Serializer.new do
+      serialize :phrase
+    end
+    serializer = person_serializer.add do
+      serialize :catchphrases, :collection => true, :serializer => catchphrase_serializer
+    end
+    serializer.to_hash(fred)["catchphrases"].should == [{"phrase" => "Yabba Dabba Do!"}, { "phrase" => "WILMA!!!"}]
   end
 end

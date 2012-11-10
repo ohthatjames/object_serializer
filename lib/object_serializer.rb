@@ -26,6 +26,7 @@ module ObjectSerializer
       @name = name.to_s
       @method_or_block_to_call = options[:calling] || @name
       @serializer = options[:serializer]
+      @collection = !!options[:collection]
     end
     
     def process(object)
@@ -34,6 +35,14 @@ module ObjectSerializer
     
     private
     def serialized_value(value)
+      if @collection
+        value.map {|v| serialized_individual_value(v) }
+      else
+        serialized_individual_value(value)
+      end
+    end
+    
+    def serialized_individual_value(value)
       if @serializer
         @serializer.to_hash(value)
       else
