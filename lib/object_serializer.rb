@@ -14,17 +14,21 @@ module ObjectSerializer
     
     def to_hash(object)
       @attributes.inject({}) do |hash, attribute|
-        hash[attribute.name] = object.send(attribute.method_to_call)
+        hash[attribute.name] = attribute.process(object)
         hash
       end
     end
   end
   
   class Attribute
-    attr_reader :name, :method_to_call
+    attr_reader :name
     def initialize(name, options)
       @name = name.to_s
       @method_to_call = options[:calling] || @name
+    end
+    
+    def process(object)
+      object.send(@method_to_call)
     end
   end
   
