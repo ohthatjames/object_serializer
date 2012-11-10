@@ -25,9 +25,23 @@ module ObjectSerializer
     def initialize(name, options)
       @name = name.to_s
       @method_or_block_to_call = options[:calling] || @name
+      @serializer = options[:serializer]
     end
     
     def process(object)
+      serialized_value(value_from(object))
+    end
+    
+    private
+    def serialized_value(value)
+      if @serializer
+        @serializer.to_hash(value)
+      else
+        value
+      end
+    end
+    
+    def value_from(object)
       if @method_or_block_to_call.respond_to?(:call)
         @method_or_block_to_call.call(object)
       else

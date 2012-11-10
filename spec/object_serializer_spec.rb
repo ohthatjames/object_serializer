@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe ObjectSerializer::Serializer do
-  Person = Struct.new(:first_name, :last_name)
+  Person = Struct.new(:first_name, :last_name, :company)
+  Company = Struct.new(:name)
   
   let(:person_serializer) do
     ObjectSerializer::Serializer.new do
@@ -44,5 +45,18 @@ describe ObjectSerializer::Serializer do
     end
     fred = Person.new("Fred", "Flintstone")
     serializer.to_hash(fred).should == {"given_name" => "Fred"}
+  end
+  
+  it "allows attributes to have their own serializers" do
+    company_serializer = ObjectSerializer::Serializer.new do
+      serialize :name
+    end
+    serializer = person_serializer.add do
+      serialize :company, :serializer => company_serializer
+    end
+    
+    company = Company.new("Slate Rock and Gravel Company")
+    fred = Person.new("Fred", "Flintstone", company)
+    serializer.to_hash(fred).should == { "first_name" => "Fred", "company" => {"name" => "Slate Rock and Gravel Company"}}
   end
 end
