@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["James Hunt"]
   gem.email         = ["ohthatjames@gmail.com"]
   gem.description   = %q{Serialize Ruby objects}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.summary       = %q{Move serialization out of the objects being serializing}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
