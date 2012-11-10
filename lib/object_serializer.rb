@@ -14,9 +14,17 @@ module ObjectSerializer
     
     def to_hash(object)
       @attributes.inject({}) do |hash, attribute|
-        hash[attribute] = object.send(attribute)
+        hash[attribute.name] = object.send(attribute.method_to_call)
         hash
       end
+    end
+  end
+  
+  class Attribute
+    attr_reader :name, :method_to_call
+    def initialize(name, options)
+      @name = name.to_s
+      @method_to_call = options[:calling] || @name
     end
   end
   
@@ -27,8 +35,8 @@ module ObjectSerializer
       @attributes = []
     end
     
-    def serialize(attribute)
-      @attributes << attribute.to_s
+    def serialize(attribute, options = {})
+      @attributes << Attribute.new(attribute, options)
     end
   end
 end

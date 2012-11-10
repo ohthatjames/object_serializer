@@ -29,4 +29,12 @@ describe ObjectSerializer::Serializer do
     fred = Person.new("Fred", "Flintstone")
     person_serializer.to_hash(fred).should == {"first_name" => "Fred"}
   end
+  
+  it "allows a different method to be called than the attribute name" do
+    serializer = ObjectSerializer::Serializer.new do
+      serialize :given_name, :calling => "first_name"
+    end
+    fred = Person.new("Fred", "Flintstone")
+    serializer.to_hash(fred).should == {"given_name" => "Fred"}
+  end
 end
