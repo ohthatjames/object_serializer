@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = ObjectSerializer::VERSION
   gem.authors       = ["James Hunt"]
   gem.email         = ["ohthatjames@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
+  gem.description   = %q{Serialize Ruby objects}
   gem.summary       = %q{TODO: Write a gem summary}
   gem.homepage      = ""
 
@@ -16,4 +16,6 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+  
+  gem.add_development_dependency "rspec"
 end
