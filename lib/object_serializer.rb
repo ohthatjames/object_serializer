@@ -24,11 +24,15 @@ module ObjectSerializer
     attr_reader :name
     def initialize(name, options)
       @name = name.to_s
-      @method_to_call = options[:calling] || @name
+      @method_or_block_to_call = options[:calling] || @name
     end
     
     def process(object)
-      object.send(@method_to_call)
+      if @method_or_block_to_call.respond_to?(:call)
+        @method_or_block_to_call.call(object)
+      else
+        object.send(@method_or_block_to_call)
+      end
     end
   end
   

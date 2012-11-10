@@ -37,4 +37,12 @@ describe ObjectSerializer::Serializer do
     fred = Person.new("Fred", "Flintstone")
     serializer.to_hash(fred).should == {"given_name" => "Fred"}
   end
+  
+  it "allows a block to be executed for an attribute" do
+    serializer = ObjectSerializer::Serializer.new do
+      serialize :given_name, :calling => lambda {|person| person.first_name}
+    end
+    fred = Person.new("Fred", "Flintstone")
+    serializer.to_hash(fred).should == {"given_name" => "Fred"}
+  end
 end
