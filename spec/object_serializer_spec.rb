@@ -15,7 +15,7 @@ describe ObjectSerializer::Serializer do
   end
   
   it "allows extension of serializers to add extra options" do
-    full_name_serializer = person_serializer.enhance do
+    full_name_serializer = person_serializer.add do
       serialize :last_name
     end
     fred = Person.new("Fred", "Flintstone")
@@ -23,7 +23,7 @@ describe ObjectSerializer::Serializer do
   end
   
   it "keeps the original serializer the same after extension" do
-    full_name_serializer = person_serializer.enhance do
+    full_name_serializer = person_serializer.add do
       serialize :last_name
     end
     fred = Person.new("Fred", "Flintstone")

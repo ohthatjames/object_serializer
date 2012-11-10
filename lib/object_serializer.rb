@@ -8,7 +8,7 @@ module ObjectSerializer
       @attributes = attributes.dup + dsl.attributes
     end
     
-    def enhance(&block)
+    def add(&block)
       self.class.new(@attributes, &block)
     end
     
