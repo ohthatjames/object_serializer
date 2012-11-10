@@ -19,7 +19,6 @@ describe ObjectSerializer::Serializer do
   end
   
   it "serializes only the fields defined in the serializer" do
-    fred = Person.new("Fred", "Flintstone")
     person_serializer.to_hash(fred).should == {"first_name" => "Fred"}
   end
   
@@ -32,7 +31,6 @@ describe ObjectSerializer::Serializer do
     full_name_serializer = person_serializer.copy_and_extend do
       serialize :last_name
     end
-    fred = Person.new("Fred", "Flintstone")
     full_name_serializer.to_hash(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
   end
   
@@ -40,7 +38,6 @@ describe ObjectSerializer::Serializer do
     full_name_serializer = person_serializer.copy_and_extend do
       serialize :last_name
     end
-    fred = Person.new("Fred", "Flintstone")
     person_serializer.to_hash(fred).should == {"first_name" => "Fred"}
   end
   
@@ -48,7 +45,6 @@ describe ObjectSerializer::Serializer do
     serializer = ObjectSerializer::Serializer.new do
       serialize :given_name, :calling => "first_name"
     end
-    fred = Person.new("Fred", "Flintstone")
     serializer.to_hash(fred).should == {"given_name" => "Fred"}
   end
   
@@ -56,7 +52,6 @@ describe ObjectSerializer::Serializer do
     serializer = ObjectSerializer::Serializer.new do
       serialize :given_name, :calling => lambda {|person| person.first_name}
     end
-    fred = Person.new("Fred", "Flintstone")
     serializer.to_hash(fred).should == {"given_name" => "Fred"}
   end
   
