@@ -8,7 +8,7 @@ module ObjectSerializer
       @attributes = attributes.dup + dsl.attributes
     end
     
-    def add(&block)
+    def copy_and_extend(&block)
       self.class.new(@attributes, &block)
     end
     
