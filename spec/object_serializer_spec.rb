@@ -23,6 +23,11 @@ describe ObjectSerializer::Serializer do
     person_serializer.to_hash(fred).should == {"first_name" => "Fred"}
   end
   
+  it "allows adding extra attributes" do
+    person_serializer.serialize :last_name
+    person_serializer.to_hash(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
+  end
+  
   it "allows extension of serializers to add extra options" do
     full_name_serializer = person_serializer.copy_and_extend do
       serialize :last_name

@@ -3,9 +3,13 @@ require "object_serializer/version"
 module ObjectSerializer
   class Serializer
     def initialize(attributes = [], &block)
-      dsl = AttributeDSL.new
+      @attributes = attributes.dup
+      dsl = AttributeDSL.new(self)
       dsl.instance_eval(&block)
-      @attributes = attributes.dup + dsl.attributes
+    end
+    
+    def serialize(attribute, options = {})
+      @attributes << Attribute.new(attribute, options)
     end
     
     def copy_and_extend(&block)
@@ -60,14 +64,12 @@ module ObjectSerializer
   end
   
   class AttributeDSL
-    attr_reader :attributes
-    
-    def initialize
-      @attributes = []
+    def initialize(attribute_owner)
+      @attribute_owner = attribute_owner
     end
     
     def serialize(attribute, options = {})
-      @attributes << Attribute.new(attribute, options)
+      @attribute_owner.serialize(attribute, options)
     end
   end
 end
