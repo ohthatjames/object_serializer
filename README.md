@@ -83,6 +83,14 @@ You can serialize collections:
 
 See LICENSE.txt
 
+## TODO
+
+* See if it works in the real world!
+* Make it work with Rails controllers
+* See where the duplication appears and if it's painful
+* See if limited AR reflection is helpful
+* See if there's a way of ensuring everything is either a primitive or has been serialized, to make ````to_json```` safe.
+
 ## Contributing
 
 1. Fork it
