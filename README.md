@@ -51,7 +51,7 @@ serializer.to_hash(fred) # => { "first_name" => "Fred", "surname" => "Flintstone
 You can extend serializers:
 
 ```ruby
-full_name_serializer = serializer.copy_and_extend do |s|
+full_name_serializer = serializer.compose do |s|
   s.serialize :last_name
 end
 full_name_serializer.to_hash(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
@@ -74,7 +74,7 @@ You can nest serializers to allow fine-grained control of attributes:
 company_serializer = ObjectSerializer::Serializer.new do |s|
   s.serialize :name
 end
-serializer = person_serializer.copy_and_extend do |s|
+serializer = person_serializer.compose do |s|
   s.serialize :company, :serializer => company_serializer
 end
 
@@ -87,7 +87,7 @@ You can serialize collections:
 catchphrase_serializer = ObjectSerializer::Serializer.new do |s|
   s.serialize :phrase
 end
-serializer = person_serializer.copy_and_extend do |s|
+serializer = person_serializer.compose do |s|
   s.serialize :catchphrases, :collection => true, :serializer => catchphrase_serializer
 end
 serializer.to_hash(fred)["catchphrases"] # => [{"phrase" => "Yabba Dabba Do!"}, { "phrase" => "WILMA!!!"}]

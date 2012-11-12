@@ -28,14 +28,14 @@ describe ObjectSerializer::Serializer do
   end
   
   it "allows extension of serializers to add extra options" do
-    full_name_serializer = person_serializer.copy_and_extend do |s|
+    full_name_serializer = person_serializer.compose do |s|
       s.serialize :last_name
     end
     full_name_serializer.to_hash(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
   end
   
   it "keeps the original serializer the same after extension" do
-    full_name_serializer = person_serializer.copy_and_extend do |s|
+    full_name_serializer = person_serializer.compose do |s|
       s.serialize :last_name
     end
     person_serializer.to_hash(fred).should == {"first_name" => "Fred"}
@@ -59,7 +59,7 @@ describe ObjectSerializer::Serializer do
     company_serializer = ObjectSerializer::Serializer.new do |s|
       s.serialize :name
     end
-    serializer = person_serializer.copy_and_extend do |s|
+    serializer = person_serializer.compose do |s|
       s.serialize :company, :serializer => company_serializer
     end
     
@@ -70,7 +70,7 @@ describe ObjectSerializer::Serializer do
     catchphrase_serializer = ObjectSerializer::Serializer.new do |s|
       s.serialize :phrase
     end
-    serializer = person_serializer.copy_and_extend do |s|
+    serializer = person_serializer.compose do |s|
       s.serialize :catchphrases, :collection => true, :serializer => catchphrase_serializer
     end
     serializer.to_hash(fred)["catchphrases"].should == [{"phrase" => "Yabba Dabba Do!"}, { "phrase" => "WILMA!!!"}]

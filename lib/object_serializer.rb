@@ -12,7 +12,7 @@ module ObjectSerializer
       @attributes << Attribute.new(attribute, options)
     end
 
-    def copy_and_extend(&block)
+    def compose(&block)
       self.class.new(@attributes, &block)
     end
 
