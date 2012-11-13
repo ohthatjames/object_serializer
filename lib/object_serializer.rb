@@ -8,7 +8,7 @@ module ObjectSerializer
       yield dsl
     end
 
-    def serialize(attribute, options = {})
+    def add_attribute(attribute, options = {})
       @attributes << Attribute.new(attribute, options)
     end
 
@@ -16,7 +16,7 @@ module ObjectSerializer
       self.class.new(@attributes, &block)
     end
 
-    def to_hash(object)
+    def serialize(object)
       @attributes.inject({}) do |hash, attribute|
         hash[attribute.name] = attribute.process(object)
         hash
@@ -48,7 +48,7 @@ module ObjectSerializer
 
     def serialized_individual_value(value)
       if @serializer
-        @serializer.to_hash(value)
+        @serializer.serialize(value)
       else
         value
       end
@@ -68,8 +68,8 @@ module ObjectSerializer
       @attribute_owner = attribute_owner
     end
 
-    def serialize(attribute, options = {})
-      @attribute_owner.serialize(attribute, options)
+    def attribute(attribute, options = {})
+      @attribute_owner.add_attribute(attribute, options)
     end
   end
 end

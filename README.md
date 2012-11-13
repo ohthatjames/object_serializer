@@ -34,63 +34,63 @@ You can create a simple name serializer with:
 
 ```ruby
 serializer = ObjectSerializer::Serializer.new do |s|
-  s.serialize :first_name
+  s.attribute :first_name
 end
 
-serializer.to_hash(fred) # => { "first_name" => "Fred" }
+serializer.serialize(fred) # => { "first_name" => "Fred" }
 ```
 
-You can add extra fields:
+You can add extra attributes:
 
 ```ruby
-serializer.serialize :last_name
+serializer.add_attribute :last_name
 
-serializer.to_hash(fred) # => { "first_name" => "Fred", "surname" => "Flintstone" }
+serializer.serialize(fred) # => { "first_name" => "Fred", "surname" => "Flintstone" }
 ```
 
 You can extend serializers:
 
 ```ruby
 full_name_serializer = serializer.compose do |s|
-  s.serialize :last_name
+  s.attribute :last_name
 end
-full_name_serializer.to_hash(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
+full_name_serializer.serialize(fred).should == {"first_name" => "Fred", "last_name" => "Flintstone"}
 ```
 
 You can add custom add custom attributes, or rename them:
 
 ```ruby
 ObjectSerializer::Serializer.new do |s|
-  s.serialize :given_name, :calling => :first_name
-  s.serialize :capitalized_surname, :calling => lambda {|person| person.last_name.capitalize }
+  s.attribute :given_name, :calling => :first_name
+  s.attribute :capitalized_surname, :calling => lambda {|person| person.last_name.capitalize }
 end
 
-serializer.to_hash(fred) # => { "given_name" => "Fred", "surname" => "FLINTSTONE" }
+serializer.serialize(fred) # => { "given_name" => "Fred", "surname" => "FLINTSTONE" }
 ```
 
 You can nest serializers to allow fine-grained control of attributes:
 
 ```ruby
 company_serializer = ObjectSerializer::Serializer.new do |s|
-  s.serialize :name
+  s.attribute :name
 end
 serializer = person_serializer.compose do |s|
-  s.serialize :company, :serializer => company_serializer
+  s.attribute :company, :serializer => company_serializer
 end
 
-serializer.to_hash(fred) # => { "first_name" => "Fred", "company" => {"name" => "Slate Rock and Gravel Company"}}
+serializer.serialize(fred) # => { "first_name" => "Fred", "company" => {"name" => "Slate Rock and Gravel Company"}}
 ```
 
 You can serialize collections:
 
 ```ruby
 catchphrase_serializer = ObjectSerializer::Serializer.new do |s|
-  s.serialize :phrase
+  s.attribute :phrase
 end
 serializer = person_serializer.compose do |s|
-  s.serialize :catchphrases, :collection => true, :serializer => catchphrase_serializer
+  s.attribute :catchphrases, :collection => true, :serializer => catchphrase_serializer
 end
-serializer.to_hash(fred)["catchphrases"] # => [{"phrase" => "Yabba Dabba Do!"}, { "phrase" => "WILMA!!!"}]
+serializer.serialize(fred)["catchphrases"] # => [{"phrase" => "Yabba Dabba Do!"}, { "phrase" => "WILMA!!!"}]
 ```
 
 ## License
